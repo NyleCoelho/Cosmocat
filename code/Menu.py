@@ -1,34 +1,42 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-
+import os
 import pygame.image
 from pygame import Surface, Rect
 from pygame.font import Font
-
-from code.Const import WIN_WIDTH, C_ORANGE, MENU_OPTION, C_WHITE, C_YELLOW
-
+from code.Const import WIN_WIDTH, WIN_HEIGHT, C_ORANGE, MENU_OPTION, C_WHITE, C_YELLOW
 
 class Menu:
     def __init__(self, window):
         self.window = window
-        self.surf = pygame.image.load('./asset/MenuBg.png').convert_alpha()
+        self.surf = pygame.image.load('./assets/Backgrounds/menu/blue-preview.png').convert_alpha()
         self.rect = self.surf.get_rect(left=0, top=0)
 
     def run(self):
         menu_option = 0
-        pygame.mixer_music.load('./asset/Menu.mp3')
+        pygame.mixer_music.load('./assets/Songs/menu-song.mp3')
         pygame.mixer_music.play(-1)
-        while True:
-            # DRAW IMAGES
-            self.window.blit(source=self.surf, dest=self.rect)
-            self.menu_text(50, "Mountain", C_ORANGE, ((WIN_WIDTH / 2), 70))
-            self.menu_text(50, "Shooter", C_ORANGE, ((WIN_WIDTH / 2), 120))
 
+        while True:
+            # Limpa a tela (opcional)
+            self.window.fill((0, 0, 0))
+            
+            # Desenha o fundo (se houver)
+            self.window.blit(self.surf, self.rect)
+            
+            # ---- TÍTULO DO JOGO (Centralizado) ----
+            title1_y = int(WIN_HEIGHT * 0.3)  # 30% da altura
+            title2_y = title1_y + 80  # Subtítulo 50px abaixo
+            self.menu_text(100, "COSMOCAT", C_ORANGE, (WIN_WIDTH // 2, title1_y))
+            self.menu_text(100, "Strike Mission", C_ORANGE, (WIN_WIDTH // 2, title2_y))
+            
+            # ---- OPÇÕES DO MENU (Centralizadas) ----
+            options_start_y = WIN_HEIGHT // 1.8  # Começa no meio exato
             for i in range(len(MENU_OPTION)):
-                if i == menu_option:
-                    self.menu_text(20, MENU_OPTION[i], C_YELLOW, ((WIN_WIDTH / 2), 200 + 25 * i))
-                else:
-                    self.menu_text(20, MENU_OPTION[i], C_WHITE, ((WIN_WIDTH / 2), 200 + 25 * i))
+                option_y = options_start_y + 60 * i  # Espaçamento de 40px
+                color = C_YELLOW if i == menu_option else C_WHITE
+                self.menu_text(50, MENU_OPTION[i], color, (WIN_WIDTH // 2, option_y))
+            
             pygame.display.flip()
 
             # Check for all events
@@ -51,7 +59,8 @@ class Menu:
                         return MENU_OPTION[menu_option]
 
     def menu_text(self, text_size: int, text: str, text_color: tuple, text_center_pos: tuple):
-        text_font: Font = pygame.font.SysFont(name="Lucida Sans Typewriter", size=text_size)
-        text_surf: Surface = text_font.render(text, True, text_color).convert_alpha()
-        text_rect: Rect = text_surf.get_rect(center=text_center_pos)
-        self.window.blit(source=text_surf, dest=text_rect)
+        font_path = ('./assets/fonts/title.ttf')
+        text_font = pygame.font.Font(font_path, text_size)    
+        text_surf = text_font.render(text, True, text_color).convert_alpha()
+        text_rect = text_surf.get_rect(center=text_center_pos)
+        self.window.blit(text_surf, text_rect)
