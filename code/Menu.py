@@ -4,7 +4,7 @@ import os
 import pygame.image
 from pygame import Surface, Rect
 from pygame.font import Font
-from code.Const import WIN_WIDTH, WIN_HEIGHT, C_ORANGE, MENU_OPTION, C_WHITE, C_YELLOW
+from code.Const import WIN_WIDTH, WIN_HEIGHT, C_GREEN, MENU_OPTION, C_WHITE, C_GREEN
 
 class Menu:
     def __init__(self, window):
@@ -27,14 +27,14 @@ class Menu:
             # ---- TÍTULO DO JOGO (Centralizado) ----
             title1_y = int(WIN_HEIGHT * 0.3)  # 30% da altura
             title2_y = title1_y + 80  # Subtítulo 50px abaixo
-            self.menu_text(100, "COSMOCAT", C_ORANGE, (WIN_WIDTH // 2, title1_y))
-            self.menu_text(100, "Strike Mission", C_ORANGE, (WIN_WIDTH // 2, title2_y))
+            self.menu_text(100, "COSMOCAT", C_GREEN, (WIN_WIDTH // 2, title1_y))
+            self.menu_text(100, "Strike Mission", C_GREEN, (WIN_WIDTH // 2, title2_y))
             
             # ---- OPÇÕES DO MENU (Centralizadas) ----
             options_start_y = WIN_HEIGHT // 1.8  # Começa no meio exato
             for i in range(len(MENU_OPTION)):
                 option_y = options_start_y + 60 * i  # Espaçamento de 40px
-                color = C_YELLOW if i == menu_option else C_WHITE
+                color = C_GREEN if i == menu_option else C_WHITE
                 self.menu_text(50, MENU_OPTION[i], color, (WIN_WIDTH // 2, option_y))
             
             pygame.display.flip()
