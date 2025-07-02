@@ -30,12 +30,24 @@ ENTITY_SPEED = {
     'Level2Bg2': 2,
     'Level2Bg3': 3,
     'Level2Bg4': 4,
-    'Player1': 3,
+    'Cosmocat': 5,
     'Player1Shot': 1,
-    'Player2': 3,
+    'Auroracat': 5,
     'Player2Shot': 3,
     'Enemy1': 1,
     'Enemy1Shot': 5,
-    'Enemy2': 1,
+    'Enemy2': 3,
     'Enemy2Shot': 2,
 }
+
+PLAYER_KEY_UP = {'Auroracat': pygame.K_UP,
+                 'Cosmocat': pygame.K_w}
+PLAYER_KEY_DOWN = {'Auroracat': pygame.K_DOWN,
+                   'Cosmocat': pygame.K_s}
+PLAYER_KEY_LEFT = {'Auroracat': pygame.K_LEFT,
+                   'Cosmocat': pygame.K_a}
+PLAYER_KEY_RIGHT = {'Auroracat': pygame.K_RIGHT,
+                    'Cosmocat': pygame.K_d}
+PLAYER_KEY_SHOOT = {'Auroracat': pygame.K_RCTRL,
+                    'Cosmocat': pygame.K_LCTRL}
+

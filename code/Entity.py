@@ -10,7 +10,7 @@ class Entity(ABC):
         if scale_to_screen:
             self.surf = pygame.transform.scale(self.surf, (WIN_WIDTH, WIN_HEIGHT))
         else:
-            self.surf = pygame.transform.scale(self.surf, (95, 95))  
+            self.surf = pygame.transform.scale(self.surf, (150, 150))  
 
         self.rect = self.surf.get_rect(topleft=position)
         self.speed = 0

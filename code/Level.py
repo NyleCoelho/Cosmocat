@@ -1,9 +1,10 @@
 
 import sys
 import pygame
+import random
 from pygame import Surface, Rect
 from pygame.font import Font
-from code.Const import C_WHITE, WIN_HEIGHT
+from code.Const import C_WHITE, WIN_HEIGHT, MENU_OPTION, EVENT_ENEMY, SPAWN_TIME
 from code.Entity import Entity
 from code.EntityFactory import EntityFactory
 
@@ -18,6 +19,10 @@ class Level:
         self.entity_list.extend(EntityFactory.get_entity('Level1Bg'))
         self.entity_list.append(EntityFactory.get_entity('Cosmocat'))
         self.timeout = 20000 #20 segundos
+        if game_mode in MENU_OPTION[1]:
+            self.entity_list.append(EntityFactory.get_entity('Auroracat'))
+        pygame.time.set_timer(EVENT_ENEMY, SPAWN_TIME)
+    
 
     def run(self):
         pygame.mixer_music.load(f'./assets/Songs/{self.name}.mp3')
@@ -32,6 +37,9 @@ class Level:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+                if event.type == EVENT_ENEMY:
+                    choice = random.choice(('Enemy1', 'Enemy2'))
+                    self.entity_list.append(EntityFactory.get_entity(choice))
 
             self.level_text(25, f'{self.name} - Timeout: {self.timeout / 1000:.1f}s', C_WHITE, (10, 5))
             self.level_text(25, f'fps: {clock.get_fps():.0f}', C_WHITE, (10, WIN_HEIGHT - 35))
