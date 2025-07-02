@@ -1,3 +1,5 @@
+import pygame
+
 WIN_WIDTH = 1366
 WIN_HEIGHT = 768
 
@@ -8,6 +10,12 @@ MENU_OPTION = ('NEW GAME',
                'MULTIPLAYER',
                'SCORE',
                'EXIT')
+
+EVENT_ENEMY = pygame.USEREVENT + 1
+EVENT_TIMEOUT = pygame.USEREVENT + 2
+SPAWN_TIME = 4000
+TIMEOUT_STEP = 100  # 100ms
+TIMEOUT_LEVEL = 20000  # 20s
 
 ENTITY_SPEED = {
     'Level1Bg0': 5,
