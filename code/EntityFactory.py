@@ -19,6 +19,6 @@ class EntityFactory:
             case 'Auroracat':
                 return Player('Auroracat', (15, WIN_HEIGHT / 2 + 70))
             case 'Enemy1':
-                return Enemy('Enemy1', (WIN_WIDTH + 10, random.randint(40, WIN_HEIGHT - 40)))
+                return Enemy('Enemy1', (WIN_WIDTH + 10, random.randint(120, WIN_HEIGHT - 120)))
             case 'Enemy2':
-                return Enemy('Enemy2', (WIN_WIDTH + 10, random.randint(40, WIN_HEIGHT - 40)))
+                return Enemy('Enemy2', (WIN_WIDTH + 10, random.randint(120, WIN_HEIGHT - 120)))

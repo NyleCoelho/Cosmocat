@@ -31,13 +31,13 @@ ENTITY_SPEED = {
     'Level2Bg3': 3,
     'Level2Bg4': 4,
     'Cosmocat': 5,
-    'Player1Shot': 1,
+    'CosmocatShot': 10,
     'Auroracat': 5,
-    'Player2Shot': 3,
-    'Enemy1': 1,
-    'Enemy1Shot': 5,
-    'Enemy2': 3,
-    'Enemy2Shot': 2,
+    'AuroracatShot': 15,
+    'Enemy1': 7,
+    'Enemy1Shot': 9,
+    'Enemy2': 8,
+    'Enemy2Shot': 16,
 }
 
 PLAYER_KEY_UP = {'Auroracat': pygame.K_UP,
@@ -51,3 +51,68 @@ PLAYER_KEY_RIGHT = {'Auroracat': pygame.K_RIGHT,
 PLAYER_KEY_SHOOT = {'Auroracat': pygame.K_RCTRL,
                     'Cosmocat': pygame.K_LCTRL}
 
+ENTITY_HEALTH = {
+    'Level1Bg0': 999,
+    'Level1Bg1': 999,
+    'Cosmocat': 300,
+    'CosmocatShot': 1,
+    'Auroracat': 300,
+    'AuroracatShot': 1,
+    'Enemy1': 50,
+    'Enemy1Shot': 1,
+    'Enemy2': 60,
+    'Enemy2Shot': 1
+}
+
+ENTITY_DAMAGE = {
+    'Level1Bg0': 0,
+    'Level1Bg1': 0,
+    'Level1Bg2': 0,
+    'Level1Bg3': 0,
+    'Level1Bg4': 0,
+    'Level1Bg5': 0,
+    'Level1Bg6': 0,
+    'Level2Bg0': 0,
+    'Level2Bg1': 0,
+    'Level2Bg2': 0,
+    'Level2Bg3': 0,
+    'Level2Bg4': 0,
+    'Cosmocat': 1,
+    'CosmocatShot': 25,
+    'Auroracat': 1,
+    'AuroracatShot': 30,
+    'Enemy1': 1,
+    'Enemy1Shot': 20,
+    'Enemy2': 1,
+    'Enemy2Shot': 15,
+}
+
+ENTITY_SCORE = {
+    'Level1Bg0': 0,
+    'Level1Bg1': 0,
+    'Level1Bg2': 0,
+    'Level1Bg3': 0,
+    'Level1Bg4': 0,
+    'Level1Bg5': 0,
+    'Level1Bg6': 0,
+    'Level2Bg0': 0,
+    'Level2Bg1': 0,
+    'Level2Bg2': 0,
+    'Level2Bg3': 0,
+    'Level2Bg4': 0,
+    'Cosmocat': 0,
+    'CosmocatShot': 0,
+    'Auroracat': 0,
+    'AuroracatShot': 0,
+    'Enemy1': 100,
+    'Enemy1Shot': 0,
+    'Enemy2': 125,
+    'Enemy2Shot': 0,
+}
+
+ENTITY_SHOT_DELAY = {
+    'Cosmocat': 20,
+    'Auroracat': 20,
+    'Enemy1': 30,
+    'Enemy2': 20,
+}
