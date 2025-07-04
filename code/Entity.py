@@ -22,6 +22,8 @@ class Entity(ABC):
         self.score = ENTITY_SCORE[self.name]
         self.last_dmg = 'None'
         self.flash_timer = 0 
+        self.damage_sound = pygame.mixer.Sound('./assets/Sound-Effects/Hit.wav')
+        self.damage_sound.set_volume(1.5)  # Ajusta volume se quiser
 
 
     @abstractmethod
@@ -32,6 +34,7 @@ class Entity(ABC):
         self.health -= amount
         self.last_dmg = 'Something'
         self.flash_timer = 100  
+        self.damage_sound.play()
 
     def draw(self, screen):
         if self.flash_timer > 0:

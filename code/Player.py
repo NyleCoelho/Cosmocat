@@ -12,6 +12,7 @@ class Player(Entity):
         self.original_surf = self.surf.copy()
         self.trail = []  # lista de tuplas: (surface, rect, alpha)
         self.trail_max_length = 7  # quantos rastros manter na tela
+        self.death_sound = pygame.mixer.Sound('./assets/Sound-Effects/PlayerDeath.wav')
         if self.name == "Cosmocat":
             trail_color = pygame.Color(9, 255, 58)  # verde
         elif self.name == "Auroracat":
@@ -89,6 +90,18 @@ class Player(Entity):
                     # Usa a cor passada, mantendo alpha do pixel original
                     colored_surf.set_at((x, y), pygame.Color(color.r, color.g, color.b, pixel.a))
         return colored_surf
+    
+
+    def take_damage(self, amount):
+        self.health -= amount
+        self.last_dmg = 'Something'
+        self.flash_timer = 100
+
+        if self.health <= 0:
+            self.death_sound.play()
+        # lembrar= colocar o que acontece quando o player morre (ex: fim de jogo, reset, etc.)
+
+
 
 
 
