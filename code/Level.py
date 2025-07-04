@@ -10,8 +10,6 @@ from code.EntityFactory import EntityFactory
 from code.EntityMediator import EntityMediator
 from code.Player import Player
 from code.Enemy import Enemy
-
-
 class Level:
 
     def __init__(self, window, name, game_mode):
@@ -34,8 +32,13 @@ class Level:
         while True: 
             clock.tick(60)
             for ent in self.entity_list:
-                ent.draw(self.window)
+                if hasattr(ent, "draw"):
+                    ent.draw(self.window)
+                else:
+                    self.window.blit(ent.surf, ent.rect)
+
                 ent.move()
+
                 if isinstance(ent, (Player, Enemy)):
                     shoot = ent.shoot()
                     if shoot is not None: 
