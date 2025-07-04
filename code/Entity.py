@@ -12,7 +12,7 @@ class Entity(ABC):
         elif custom_scale:
             self.surf = pygame.transform.scale(self.surf, custom_scale)
         else:
-            self.surf = pygame.transform.scale(self.surf, (120, 120))  
+            self.surf = pygame.transform.scale(self.surf, (120, 100))  
 
         self.rect = self.surf.get_rect(topleft=position)
         self.speed = 0
