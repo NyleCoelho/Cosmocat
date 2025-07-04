@@ -7,6 +7,8 @@ class Player(Entity):
     def __init__(self, name: str, position: tuple):
         super().__init__(name, position, scale_to_screen=False)
         self.shot_delay = ENTITY_SHOT_DELAY[self.name]
+        self.shot_sound = pygame.mixer.Sound('./assets/Sound-Effects/Shoot.wav')
+        self.shot_sound.set_volume(0.5)  # opcional: volume entre 0.0 e 1.0
 
     def move(self):
         pressed_key = pygame.key.get_pressed()
@@ -20,11 +22,15 @@ class Player(Entity):
             self.rect.centerx -= ENTITY_SPEED[self.name]         
         pass
 
+        if self.flash_timer > 0:
+            self.flash_timer -= 1
+
     def shoot(self):
         self.shot_delay -= 1
         if self.shot_delay == 0:
             self.shot_delay = ENTITY_SHOT_DELAY[self.name]
             pressed_key = pygame.key.get_pressed()
             if pressed_key[PLAYER_KEY_SHOOT[self.name]]:
+                self.shot_sound.play()
                 return CosmocatShot(name=f'{self.name}Shot', position=(self.rect.centerx, self.rect.centery))
 

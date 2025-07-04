@@ -49,18 +49,18 @@ PLAYER_KEY_LEFT = {'Auroracat': pygame.K_LEFT,
 PLAYER_KEY_RIGHT = {'Auroracat': pygame.K_RIGHT,
                     'Cosmocat': pygame.K_d}
 PLAYER_KEY_SHOOT = {'Auroracat': pygame.K_RCTRL,
-                    'Cosmocat': pygame.K_LCTRL}
+                    'Cosmocat': pygame.K_RETURN}
 
 ENTITY_HEALTH = {
     'Level1Bg0': 999,
     'Level1Bg1': 999,
-    'Cosmocat': 300,
+    'Cosmocat': 1000,
     'CosmocatShot': 1,
     'Auroracat': 300,
     'AuroracatShot': 1,
-    'Enemy1': 50,
+    'Enemy1': 110,
     'Enemy1Shot': 1,
-    'Enemy2': 60,
+    'Enemy2': 110,
     'Enemy2Shot': 1
 }
 

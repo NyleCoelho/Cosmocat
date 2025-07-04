@@ -25,6 +25,7 @@ class EntityMediator:
         valid_interaction = False
         if isinstance(ent1, Enemy) and isinstance(ent2, CosmocatShot):
             valid_interaction = True
+            ent1.killed_by_player = True  #  Marca que foi morto por tiro
         elif isinstance(ent1, CosmocatShot) and isinstance(ent2, Enemy):
             valid_interaction = True
         elif isinstance(ent1, Player) and isinstance(ent2, EnemyShot):
@@ -41,6 +42,8 @@ class EntityMediator:
                 ent2.health -= ent1.damage
                 ent1.last_dmg = ent2.name
                 ent2.last_dmg = ent1.name
+                ent1.flash_timer = 10
+                ent2.flash_timer = 10
 
     @staticmethod
     def __give_score(enemy: Enemy, entity_list: list[Entity]):
@@ -66,6 +69,7 @@ class EntityMediator:
     def verify_health(entity_list: list[Entity]):
         for ent in entity_list:
             if ent.health <= 0:
-                if isinstance(ent, Enemy):
+                if isinstance(ent, Enemy) and ent.killed_by_player:
                     EntityMediator.__give_score(ent, entity_list)
+                    ent.death_sound.play()
                 entity_list.remove(ent)

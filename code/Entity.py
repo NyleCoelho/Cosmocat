@@ -12,7 +12,7 @@ class Entity(ABC):
         elif custom_scale:
             self.surf = pygame.transform.scale(self.surf, custom_scale)
         else:
-            self.surf = pygame.transform.scale(self.surf, (150, 150))  
+            self.surf = pygame.transform.scale(self.surf, (120, 120))  
 
         self.rect = self.surf.get_rect(topleft=position)
         self.speed = 0
@@ -21,8 +21,32 @@ class Entity(ABC):
         self.damage = ENTITY_DAMAGE[self.name]
         self.score = ENTITY_SCORE[self.name]
         self.last_dmg = 'None'
+        self.flash_timer = 0 
 
 
     @abstractmethod
     def move(self):
         pass
+
+    def take_damage(self, amount):
+        self.health -= amount
+        self.last_dmg = 'Something'
+        self.flash_timer = 100  
+
+    def draw(self, screen):
+        if self.flash_timer > 0:
+            flash = self.surf.copy()
+
+            # Criar uma cópia da alpha (máscara de transparência)
+            alpha_mask = pygame.mask.from_surface(flash)
+            mask_surface = alpha_mask.to_surface(setcolor=(151, 0, 40, 100), unsetcolor=(0, 0, 0, 0))
+            mask_surface = mask_surface.convert_alpha()
+
+            # Aplica o vermelho SOMENTE nas áreas visíveis
+            flash.blit(mask_surface, (0, 0), special_flags=pygame.BLEND_RGBA_ADD)
+            screen.blit(flash, self.rect.topleft)
+        else:
+            screen.blit(self.surf, self.rect.topleft)
+
+
+
