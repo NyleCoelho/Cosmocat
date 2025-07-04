@@ -35,7 +35,7 @@ ENTITY_SPEED = {
     'Auroracat': 5,
     'AuroracatShot': 15,
     'Enemy1': 7,
-    'Enemy1Shot': 9,
+    'Enemy1Shot': 16,
     'Enemy2': 8,
     'Enemy2Shot': 16,
 }
@@ -113,6 +113,6 @@ ENTITY_SCORE = {
 ENTITY_SHOT_DELAY = {
     'Cosmocat': 20,
     'Auroracat': 20,
-    'Enemy1': 30,
+    'Enemy1': 20,
     'Enemy2': 20,
 }
