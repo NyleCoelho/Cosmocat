@@ -38,8 +38,8 @@ class EntityMediator:
                     ent1.rect.left <= ent2.rect.right and
                     ent1.rect.bottom >= ent2.rect.top and
                     ent1.rect.top <= ent2.rect.bottom):
-                ent1.health -= ent2.damage
-                ent2.health -= ent1.damage
+                ent1.take_damage(ent2.damage)
+                ent2.take_damage(ent1.damage)
                 ent1.last_dmg = ent2.name
                 ent2.last_dmg = ent1.name
                 ent1.flash_timer = 10
@@ -71,5 +71,4 @@ class EntityMediator:
             if ent.health <= 0:
                 if isinstance(ent, Enemy) and ent.killed_by_player:
                     EntityMediator.__give_score(ent, entity_list)
-                    ent.death_sound.play()
                 entity_list.remove(ent)

@@ -21,6 +21,11 @@ class Enemy(Entity):
             self.shot_delay = ENTITY_SHOT_DELAY[self.name]
             return EnemyShot(name=f'{self.name}Shot', position=(self.rect.centerx, self.rect.centery))
         
-    def death(self):
-        if self.health == 0:
-            self.death_sound.play()
+    def take_damage(self, amount):
+        if self.health > 0:  # Só aplica se ele ainda estiver vivo
+            self.health -= amount
+            self.last_dmg = 'Something'  
+            self.flash_timer = 100
+
+            if self.health <= 0:  #  momento da morte
+                self.death_sound.play()
