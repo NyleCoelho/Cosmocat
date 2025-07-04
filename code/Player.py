@@ -8,9 +8,11 @@ class Player(Entity):
         super().__init__(name, position, scale_to_screen=False)
         self.shot_delay = ENTITY_SHOT_DELAY[self.name]
         self.shot_sound = pygame.mixer.Sound('./assets/Sound-Effects/Shoot.wav')
-        self.shot_sound.set_volume(0.5)  # opcional: volume entre 0.0 e 1.0
+        self.shot_sound.set_volume(0.5)
+        self.original_surf = self.surf.copy()
 
     def move(self):
+        angle = 0  # padrão (reto)
         pressed_key = pygame.key.get_pressed()
         if pressed_key[PLAYER_KEY_UP[self.name]] and self.rect.top > 0:
             self.rect.centery -= ENTITY_SPEED[self.name]
@@ -18,9 +20,16 @@ class Player(Entity):
             self.rect.centery += ENTITY_SPEED[self.name]
         if pressed_key[PLAYER_KEY_RIGHT[self.name]] and self.rect.right < WIN_WIDTH:
             self.rect.centerx += ENTITY_SPEED[self.name]  
+            angle = -5
         if pressed_key[PLAYER_KEY_LEFT[self.name]] and self.rect.left > 0:
-            self.rect.centerx -= ENTITY_SPEED[self.name]         
+            self.rect.centerx -= ENTITY_SPEED[self.name] 
+            angle = 5      
         pass
+
+        self.surf = pygame.transform.rotate(self.original_surf, angle)
+
+        # Recalcula o rect para manter a posição após rotação
+        self.rect = self.surf.get_rect(center=self.rect.center)
 
         if self.flash_timer > 0:
             self.flash_timer -= 1
