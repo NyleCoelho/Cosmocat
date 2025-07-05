@@ -7,13 +7,16 @@ WIN_HEIGHT = 768
 C_GREEN = (111, 254, 3)
 C_WHITE = (255,255,255)
 C_PINK = (255, 94, 240)
-C_RED = (0, 0, 0)
+C_RED = (255, 60, 60)
 C_BLACK = (0, 0, 0)
 
 MENU_OPTION = ('NEW GAME', 
                'MULTIPLAYER',
                'SCORE',
                'EXIT')
+
+GAMEOVER_OPTION = ('TENTAR NOVAMENTE', 
+                    'VOLTAR AO MENU',)
 
 EVENT_ENEMY = pygame.USEREVENT + 1
 EVENT_TIMEOUT = pygame.USEREVENT + 2

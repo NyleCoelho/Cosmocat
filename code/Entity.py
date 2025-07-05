@@ -78,8 +78,10 @@ class Entity(ABC):
         else:
             life_color = C_GREEN
 
-        pygame.draw.rect(screen, C_RED, (x, y, bar_width, bar_height))              # Fundo
-        pygame.draw.rect(screen, life_color, (x, y, filled_width, bar_height))      # Vida atual
+        pygame.draw.rect(screen, C_WHITE, (x - 1, y - 1, bar_width + 2, bar_height + 2))
+        pygame.draw.rect(screen, C_BLACK, (x, y, bar_width, bar_height))              # Fundo
+        pygame.draw.rect(screen, life_color, (x, y, filled_width, bar_height)) 
+             # Vida atual
 
         # Texto opcional de HP numérico
         font = pygame.font.SysFont(None, 20)

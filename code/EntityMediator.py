@@ -97,8 +97,10 @@ class EntityMediator:
 
     @staticmethod
     def verify_health(entity_list: list[Entity]):
-        for ent in entity_list:
+        for ent in entity_list[:]:  # usa cópia da lista para evitar bugs
             if ent.health <= 0:
                 if isinstance(ent, Enemy) and ent.last_dmg in ['CosmocatShot', 'AuroracatShot']:
                     EntityMediator.__give_score(ent, entity_list)
-                entity_list.remove(ent)
+                # Só remove se **não for jogador**
+                if not isinstance(ent, Player):
+                    entity_list.remove(ent)

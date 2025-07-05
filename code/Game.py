@@ -1,8 +1,8 @@
 import pygame
 from code.Menu import Menu
 from code.Menu import WIN_WIDTH, WIN_HEIGHT
-from code.Menu import MENU_OPTION  # Add this import if MENU_OPTION is defined in Menu.py
-from code.Level import Level  # Import Level class
+from code.Menu import MENU_OPTION
+from code.Level import Level
 
 class Game:
     def __init__(self):
@@ -18,10 +18,18 @@ class Game:
             menu_return = menu.run()
 
             if menu_return in [MENU_OPTION[0], MENU_OPTION[1]]:
-                level = Level(self.window, 'Level1', menu_return)
-                level_return = level.run()
+                while True:
+                    level = Level(self.window, 'Level1', menu_return)
+                    level_return = level.run()
+
+                    if level_return == 'RESTART':
+                        continue  # reinicia o nível
+                    elif level_return == 'MENU':
+                        break  # volta pro menu principal
+                    else:
+                        break  # qualquer outro caso
             elif menu_return == MENU_OPTION[3]:
                 pygame.quit()
                 quit()
-            else: 
+            else:
                 pass

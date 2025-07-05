@@ -76,6 +76,21 @@ class Level:
             EntityMediator.verify_collision(entity_list=self.entity_list)
             EntityMediator.verify_health(entity_list=self.entity_list)
 
+                        # Verificar se algum player morreu
+            for entity in self.entity_list:
+                if isinstance(entity, Player) and entity.health <= 0:
+                    from code.GameOver import GameOver 
+                    pygame.mixer_music.stop()
+                    gameover_screen = GameOver(self.window)
+                    pygame.time.delay(500)  # pausa de 0.5 segundo
+                    option = gameover_screen.run()
+
+                    if option == 'TENTAR NOVAMENTE':
+                        return 'RESTART'
+                    elif option == 'VOLTAR AO MENU':
+                        return 'MENU'
+
+
             for entity in self.entity_list[:]:
                 if isinstance(entity, LifeSaver):
                     for other in self.entity_list:
