@@ -10,7 +10,6 @@ class Enemy(Entity):
         super().__init__(name, position, scale_to_screen=False)
         self.shot_delay = ENTITY_SHOT_DELAY[self.name]
         self.death_sound = pygame.mixer.Sound('./assets/Sound-Effects/Boom.wav')
-        self.killed_by_player = False
         self.velocity_x = -ENTITY_SPEED[self.name]  # continua indo pra esquerda
         self.wave_offset = random.uniform(0, math.pi * 2)  # cada inimigo começa com uma fase diferente
         self.t = 0  # tempo interno para o zigue-zague

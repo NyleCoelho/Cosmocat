@@ -82,7 +82,7 @@ class Entity(ABC):
 
         # Texto opcional de HP numérico
         font = pygame.font.SysFont(None, 20)
-        texto = font.render(f'{int(self.health)}/{max_health}', True, C_BLACK)
+        texto = font.render(f'{int(self.health)}/{max_health}', True, C_WHITE)
         screen.blit(texto, (x + bar_width + 10, y))
 
             # Ícone de coração personalizado

@@ -8,7 +8,7 @@ class Player(Entity):
         super().__init__(name, position, scale_to_screen=False)
         self.shot_delay = ENTITY_SHOT_DELAY[self.name]
         self.shot_sound = pygame.mixer.Sound('./assets/Sound-Effects/Shoot.wav')
-        self.shot_sound.set_volume(0.5)
+        self.shot_sound.set_volume(2.5)
         self.original_surf = self.surf.copy()
         self.trail = []  # lista de tuplas: (surface, rect, alpha)
         self.trail_max_length = 7  # quantos rastros manter na tela
@@ -19,8 +19,8 @@ class Player(Entity):
             trail_color = pygame.Color(255, 9, 182)  # rosa (hot pink)
         else:
             trail_color = pygame.Color(255, 255, 255)  # branco padrão, por segurança
-
         self.colored_surf = self.create_colored_version(trail_color)
+        self.lifesaver_sound = pygame.mixer.Sound('./assets/Sound-Effects/life-saver.wav')
 
 
     def move(self):

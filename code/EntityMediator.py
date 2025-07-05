@@ -1,9 +1,10 @@
-from code.Const import WIN_WIDTH
+from code.Const import WIN_WIDTH, ENTITY_HEALTH
 from code.Enemy import Enemy
 from code.EnemyShot import EnemyShot
 from code.Entity import Entity
 from code.Player import Player
 from code.CosmocatShot import CosmocatShot
+from code.LifeSaver import LifeSaver
 
 class EntityMediator:
 
@@ -31,12 +32,28 @@ class EntityMediator:
             valid_interaction = True
         elif isinstance(ent1, EnemyShot) and isinstance(ent2, Player):
             valid_interaction = True
+        elif isinstance(ent1, Player) and isinstance(ent2, LifeSaver):
+            valid_interaction = True
+        elif isinstance(ent1, LifeSaver) and isinstance(ent2, Player):
+            valid_interaction = True
 
         if valid_interaction:  # if valid_interaction == True:
             if (ent1.rect.right >= ent2.rect.left and
                     ent1.rect.left <= ent2.rect.right and
                     ent1.rect.bottom >= ent2.rect.top and
                     ent1.rect.top <= ent2.rect.bottom):
+                
+                if isinstance(ent1, LifeSaver) or isinstance(ent2, LifeSaver):
+                    player = ent1 if isinstance(ent1, Player) else ent2
+                    lifesaver = ent2 if isinstance(ent1, Player) else ent1
+                    max_health = (ENTITY_HEALTH[player.name] + 1)
+                    heal_amount = min(100, max_health - player.health)
+
+                    if heal_amount > 0:  # Só cura se precisar
+                        player.health += heal_amount
+                        player.lifesaver_sound.play()
+                    
+
                 ent1.take_damage(ent2.damage)
                 ent2.take_damage(ent1.damage)
                 ent1.last_dmg = ent2.name
@@ -68,6 +85,6 @@ class EntityMediator:
     def verify_health(entity_list: list[Entity]):
         for ent in entity_list:
             if ent.health <= 0:
-                if isinstance(ent, Enemy) and ent.killed_by_player:
+                if isinstance(ent, Enemy) and ent.last_dmg in ['CosmocatShot', 'AuroracatShot']:
                     EntityMediator.__give_score(ent, entity_list)
                 entity_list.remove(ent)
