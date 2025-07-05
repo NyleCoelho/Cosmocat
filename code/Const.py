@@ -21,6 +21,9 @@ SPAWN_TIME = 2000
 TIMEOUT_STEP = 100  # 100ms
 TIMEOUT_LEVEL = 20000  # 20s
 
+SPAWN_POWERUP_EVENT = pygame.USEREVENT + 4
+POWERUP_DURATION = 10000  # 10 segundos
+
 ENTITY_SPEED = {
     'Level1Bg0': 5,
     'Level1Bg1': 7,
@@ -42,7 +45,8 @@ ENTITY_SPEED = {
     'Enemy1Shot': 16,
     'Enemy2': 8,
     'Enemy2Shot': 16,
-    'LifeSaver': 1
+    'LifeSaver': 1,
+    'PowerUp': 2,
 }
 
 PLAYER_KEY_UP = {'Auroracat': pygame.K_UP,
@@ -67,7 +71,8 @@ ENTITY_HEALTH = {
     'Enemy1Shot': 1,
     'Enemy2': 110,
     'Enemy2Shot': 1,
-    'LifeSaver': 1
+    'LifeSaver': 1,
+    'PowerUp': 1
 }
 
 ENTITY_DAMAGE = {
@@ -91,7 +96,10 @@ ENTITY_DAMAGE = {
     'Enemy1Shot': 20,
     'Enemy2': 1,
     'Enemy2Shot': 15,
-    'LifeSaver': 1
+    'LifeSaver': 1,
+    'PowerUp': 0,
+    'CosmocatShotPowered': 30,  # Dano aumentado (opcional)
+    'AuroracatShotPowered': 35  # Dano aumentado (opcional)
 }
 
 ENTITY_SCORE = {
@@ -115,7 +123,8 @@ ENTITY_SCORE = {
     'Enemy1Shot': 0,
     'Enemy2': 125,
     'Enemy2Shot': 0,
-    'LifeSaver': 1
+    'LifeSaver': 1,
+    'PowerUp': 0
 }
 
 ENTITY_SHOT_DELAY = {

@@ -5,6 +5,7 @@ from code.Entity import Entity
 from code.Player import Player
 from code.CosmocatShot import CosmocatShot
 from code.LifeSaver import LifeSaver
+from code.PowerUp import PowerUp
 
 class EntityMediator:
 
@@ -36,6 +37,10 @@ class EntityMediator:
             valid_interaction = True
         elif isinstance(ent1, LifeSaver) and isinstance(ent2, Player):
             valid_interaction = True
+        elif isinstance(ent1, Player) and isinstance(ent2, PowerUp):
+            valid_interaction = True
+        elif isinstance(ent1, PowerUp) and isinstance(ent2, Player):
+            valid_interaction = True
 
         if valid_interaction:  # if valid_interaction == True:
             if (ent1.rect.right >= ent2.rect.left and
@@ -52,6 +57,15 @@ class EntityMediator:
                     if heal_amount > 0:  # Só cura se precisar
                         player.health += heal_amount
                         player.lifesaver_sound.play()
+
+                # Adicione a lógica para PowerUp
+                if isinstance(ent1, PowerUp) or isinstance(ent2, PowerUp):
+                    player = ent1 if isinstance(ent1, Player) else ent2
+                    powerup = ent2 if isinstance(ent1, Player) else ent1
+                    
+                    # Ativa o power-up no jogador
+                    player.activate_powerup()
+                    powerup.health = 0  # Remove o power-up
                     
 
                 ent1.take_damage(ent2.damage)

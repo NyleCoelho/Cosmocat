@@ -34,6 +34,7 @@ class Entity(ABC):
         self.life_icon = pygame.transform.scale(self.life_icon, (50, 50))
 
 
+
     @abstractmethod
     def move(self):
         pass

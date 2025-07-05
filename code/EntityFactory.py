@@ -4,6 +4,7 @@ from code.Player import Player
 from code.Enemy import Enemy
 from code.Entity import Entity
 from code.LifeSaver import LifeSaver
+from code.PowerUp import PowerUp
 import random
 import pygame
 class EntityFactory:
@@ -27,3 +28,5 @@ class EntityFactory:
                 return Enemy('Enemy2', (WIN_WIDTH + 10, random.randint(120, WIN_HEIGHT - 120)))
             case 'lifesaver':
                 return LifeSaver('LifeSaver', (WIN_WIDTH + 10, random.randint(120, WIN_HEIGHT - 120)))
+            case 'PowerUp':
+                return PowerUp('PowerUp', (WIN_WIDTH + 10, random.randint(120, WIN_HEIGHT - 120)))

@@ -3,7 +3,7 @@ from code.Entity import Entity
 import random
 import math
 
-class LifeSaver(Entity):
+class PowerUp(Entity):
 
     def __init__(self, name: str, position: tuple):
         super().__init__(name, position, scale_to_screen=False, custom_scale=(50, 50))

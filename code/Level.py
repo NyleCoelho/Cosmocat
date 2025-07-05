@@ -4,7 +4,7 @@ import pygame
 import random
 from pygame import Surface, Rect
 from pygame.font import Font
-from code.Const import C_WHITE, WIN_HEIGHT, MENU_OPTION, EVENT_ENEMY, SPAWN_TIME, C_GREEN, C_PINK, SPAWN_LIFESAVER_EVENT
+from code.Const import C_WHITE, WIN_HEIGHT, MENU_OPTION, EVENT_ENEMY, SPAWN_TIME, C_GREEN, C_PINK, SPAWN_LIFESAVER_EVENT, POWERUP_DURATION, SPAWN_POWERUP_EVENT
 from code.Entity import Entity
 from code.EntityFactory import EntityFactory
 from code.EntityMediator import EntityMediator
@@ -25,6 +25,8 @@ class Level:
             self.entity_list.append(EntityFactory.get_entity('Auroracat'))
         pygame.time.set_timer(EVENT_ENEMY, SPAWN_TIME)
         pygame.time.set_timer(SPAWN_LIFESAVER_EVENT, 10000)  # aparece a cada 10 segundos
+        pygame.time.set_timer(EVENT_ENEMY, SPAWN_TIME)
+        pygame.time.set_timer(SPAWN_POWERUP_EVENT, POWERUP_DURATION)  # aparece a cada 10 segundos
     
 
     def run(self):
@@ -45,6 +47,8 @@ class Level:
                     self.entity_list.append(EntityFactory.get_entity(choice))
                 if event.type == SPAWN_LIFESAVER_EVENT:
                     self.entity_list.append(EntityFactory.get_entity('lifesaver'))
+                if event.type == SPAWN_POWERUP_EVENT:
+                    self.entity_list.append(EntityFactory.get_entity('PowerUp'))
 
 
             # Atualiza e desenha entidades
