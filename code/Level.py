@@ -4,13 +4,14 @@ import pygame
 import random
 from pygame import Surface, Rect
 from pygame.font import Font
-from code.Const import C_WHITE, WIN_HEIGHT, MENU_OPTION, EVENT_ENEMY, SPAWN_TIME, C_GREEN, C_PINK, SPAWN_LIFESAVER_EVENT, POWERUP_DURATION, SPAWN_POWERUP_EVENT
+from code.Const import C_WHITE, WIN_HEIGHT, MENU_OPTION, EVENT_ENEMY, SPAWN_TIME, C_GREEN, C_PINK, SPAWN_LIFESAVER_EVENT, POWERUP_DURATION, SPAWN_POWERUP_EVENT, WIN_WIDTH
 from code.Entity import Entity
 from code.EntityFactory import EntityFactory
 from code.EntityMediator import EntityMediator
 from code.Player import Player
 from code.Enemy import Enemy
 from code.LifeSaver import LifeSaver
+
 class Level:
 
     def __init__(self, window, name, game_mode):
@@ -20,7 +21,9 @@ class Level:
         self.entity_list: list[Entity] = []
         self.entity_list.extend(EntityFactory.get_entity('Level1Bg'))
         self.entity_list.append(EntityFactory.get_entity('Cosmocat'))
-        self.timeout = 20000 #20 segundos
+        self.timeout = 200000 #20 segundos
+        self.start_time = pygame.time.get_ticks()
+        self.timer_font = pygame.font.Font('./assets/fonts/title.ttf', 32)
         if game_mode in MENU_OPTION[1]:
             self.entity_list.append(EntityFactory.get_entity('Auroracat'))
         pygame.time.set_timer(EVENT_ENEMY, SPAWN_TIME)
@@ -28,6 +31,12 @@ class Level:
         pygame.time.set_timer(EVENT_ENEMY, SPAWN_TIME)
         pygame.time.set_timer(SPAWN_POWERUP_EVENT, POWERUP_DURATION)  # aparece a cada 10 segundos
     
+    def level_text(self, text_size: int, text: str, text_color: tuple, text_center_pos: tuple):
+        font_path = './assets/fonts/title.ttf'
+        text_font: Font = pygame.font.Font(font_path, text_size)
+        text_surf: Surface = text_font.render(text, True, text_color).convert_alpha()
+        text_rect: Rect = text_surf.get_rect(center=text_center_pos)
+        self.window.blit(source=text_surf, dest=text_rect)
 
     def run(self):
         pygame.mixer_music.load(f'./assets/Songs/{self.name}.mp3')
@@ -36,6 +45,13 @@ class Level:
         clock = pygame.time.Clock()
         while True:
             clock.tick(60)
+
+        # Verifica se o tempo de fase acabou
+            current_time = pygame.time.get_ticks()
+            elapsed_time = current_time - self.start_time
+
+            if elapsed_time >= self.timeout:
+                return 'MENU'  # ou 'WIN' ou qualquer outra ação que você queira
 
             # Eventos
             for event in pygame.event.get():
@@ -70,6 +86,11 @@ class Level:
                 if isinstance(ent, Player):
                     ent.draw_health_hud(self.window)
 
+            # Tempo restante em segundos
+            remaining_time = max(0, (self.timeout - elapsed_time) // 1000)
+            self.level_text(f"Tempo restante: {remaining_time}s", C_WHITE, (WIN_WIDTH // 2, 40))
+
+
             pygame.display.flip()
 
             # Verificações
@@ -102,8 +123,7 @@ class Level:
                             break
 
 
-    def level_text(self, text_size: int, text: str, text_color: tuple, text_pos: tuple):
-        text_font: Font = pygame.font.SysFont(name="Lucida Sans Typewriter", size=text_size)
-        text_surf: Surface = text_font.render(text, True, text_color).convert_alpha()
-        text_rect: Rect = text_surf.get_rect(left=text_pos[0], top=text_pos[1])
-        self.window.blit(source=text_surf, dest=text_rect)
+    def level_text(self, text: str, text_color: tuple, text_center_pos: tuple):
+        text_surf = self.timer_font.render(text, True, text_color).convert_alpha()
+        text_rect = text_surf.get_rect(center=text_center_pos)
+        self.window.blit(text_surf, text_rect)
