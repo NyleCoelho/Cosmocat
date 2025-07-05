@@ -11,6 +11,7 @@ class Menu:
         self.window = window
         self.surf = pygame.image.load('./assets/Backgrounds/menu/blue-preview.png').convert_alpha()
         self.rect = self.surf.get_rect(left=0, top=0)
+        self.navigate_sound = pygame.mixer.Sound('./assets/Sound-Effects/menu-hover.wav')
 
     def run(self):
         menu_option = 0
@@ -45,16 +46,19 @@ class Menu:
                     quit()  # encerrar o pygame
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_s:  # Tecla S (para baixo)
+                        self.navigate_sound.play()
                         if menu_option < len(MENU_OPTION) - 1:
                             menu_option += 1
                         else:
                             menu_option = 0
                     if event.key == pygame.K_w:  # Tecla W (para cima)
+                        self.navigate_sound.play()
                         if menu_option > 0:
                             menu_option -= 1
                         else:
                             menu_option = len(MENU_OPTION) - 1
                     if event.key == pygame.K_RETURN:  # ENTER (mantido)
+                        self.navigate_sound.play()
                         return MENU_OPTION[menu_option]
 
     def menu_text(self, text_size: int, text: str, text_color: tuple, text_center_pos: tuple):
