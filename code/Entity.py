@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 import pygame.image
-from code.Const import WIN_WIDTH, WIN_HEIGHT, ENTITY_DAMAGE, ENTITY_HEALTH, ENTITY_SCORE
+from code.Const import WIN_WIDTH, WIN_HEIGHT, ENTITY_DAMAGE, ENTITY_HEALTH, ENTITY_SCORE, C_PINK, C_GREEN, C_BLACK, C_RED, C_WHITE
 
 class Entity(ABC): 
     def __init__(self, name: str, position: tuple, scale_to_screen=True, custom_scale=None):
@@ -23,7 +23,15 @@ class Entity(ABC):
         self.last_dmg = 'None'
         self.flash_timer = 0 
         self.damage_sound = pygame.mixer.Sound('./assets/Sound-Effects/Hit.wav')
-        self.damage_sound.set_volume(1.5)  # Ajusta volume se quiser
+        self.damage_sound.set_volume(2.5)  
+
+        if self.name.lower() == 'auroracat':
+            icon_path = './assets/Shots-and-icons/Auroracat-life.png'
+        else:
+            icon_path = './assets/Shots-and-icons/Cosmocat-life.png'
+
+        self.life_icon = pygame.image.load(icon_path).convert_alpha()
+        self.life_icon = pygame.transform.scale(self.life_icon, (50, 50))
 
 
     @abstractmethod
@@ -52,4 +60,30 @@ class Entity(ABC):
             screen.blit(self.surf, self.rect.topleft)
 
 
+    def draw_health_hud(self, screen):
+        bar_width = 190
+        bar_height = 20
+        x = 50
+        y = 30
 
+        max_health = ENTITY_HEALTH[self.name]
+        proportion = max(0, self.health / max_health)
+        filled_width = int(bar_width * proportion)
+
+        # Cor personalizada por personagem
+        if self.name.lower() == 'auroracat':
+            life_color = C_PINK
+            y = 70
+        else:
+            life_color = C_GREEN
+
+        pygame.draw.rect(screen, C_RED, (x, y, bar_width, bar_height))              # Fundo
+        pygame.draw.rect(screen, life_color, (x, y, filled_width, bar_height))      # Vida atual
+
+        # Texto opcional de HP numérico
+        font = pygame.font.SysFont(None, 20)
+        texto = font.render(f'{int(self.health)}/{max_health}', True, C_BLACK)
+        screen.blit(texto, (x + bar_width + 10, y))
+
+            # Ícone de coração personalizado
+        screen.blit(self.life_icon, (x - 37, y - 15))  # Desenha ao lado esquerdo da barra   

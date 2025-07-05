@@ -4,12 +4,13 @@ import pygame
 import random
 from pygame import Surface, Rect
 from pygame.font import Font
-from code.Const import C_WHITE, WIN_HEIGHT, MENU_OPTION, EVENT_ENEMY, SPAWN_TIME
+from code.Const import C_WHITE, WIN_HEIGHT, MENU_OPTION, EVENT_ENEMY, SPAWN_TIME, C_GREEN, C_PINK, SPAWN_LIFESAVER_EVENT
 from code.Entity import Entity
 from code.EntityFactory import EntityFactory
 from code.EntityMediator import EntityMediator
 from code.Player import Player
 from code.Enemy import Enemy
+from code.LifeSaver import LifeSaver
 class Level:
 
     def __init__(self, window, name, game_mode):
@@ -23,14 +24,30 @@ class Level:
         if game_mode in MENU_OPTION[1]:
             self.entity_list.append(EntityFactory.get_entity('Auroracat'))
         pygame.time.set_timer(EVENT_ENEMY, SPAWN_TIME)
+        pygame.time.set_timer(SPAWN_LIFESAVER_EVENT, 10000)  # aparece a cada 10 segundos
     
 
     def run(self):
         pygame.mixer_music.load(f'./assets/Songs/{self.name}.mp3')
         pygame.mixer_music.play(-1)
+
         clock = pygame.time.Clock()
-        while True: 
+        while True:
             clock.tick(60)
+
+            # Eventos
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == EVENT_ENEMY:
+                    choice = random.choice(('Enemy1', 'Enemy2'))
+                    self.entity_list.append(EntityFactory.get_entity(choice))
+                if event.type == SPAWN_LIFESAVER_EVENT:
+                    self.entity_list.append(EntityFactory.get_entity('lifesaver'))
+
+
+            # Atualiza e desenha entidades
             for ent in self.entity_list:
                 if hasattr(ent, "draw"):
                     ent.draw(self.window)
@@ -41,23 +58,31 @@ class Level:
 
                 if isinstance(ent, (Player, Enemy)):
                     shoot = ent.shoot()
-                    if shoot is not None: 
+                    if shoot is not None:
                         self.entity_list.append(shoot)
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                if event.type == EVENT_ENEMY:
-                    choice = random.choice(('Enemy1', 'Enemy2'))
-                    self.entity_list.append(EntityFactory.get_entity(choice))
 
-            self.level_text(25, f'{self.name} - Timeout: {self.timeout / 1000:.1f}s', C_WHITE, (10, 5))
-            self.level_text(25, f'fps: {clock.get_fps():.0f}', C_WHITE, (10, WIN_HEIGHT - 35))
-            self.level_text(25, f'entidades: {len(self.entity_list)}', C_WHITE, (10, WIN_HEIGHT - 20))
+            # Desenha barra de vida dos players no canto da tela
+            for ent in self.entity_list:
+                if isinstance(ent, Player):
+                    ent.draw_health_hud(self.window)
+
             pygame.display.flip()
+
+            # Verificações
             EntityMediator.verify_collision(entity_list=self.entity_list)
             EntityMediator.verify_health(entity_list=self.entity_list)
-        pass
+
+            for entity in self.entity_list[:]:
+                if isinstance(entity, LifeSaver):
+                    for other in self.entity_list:
+                        if isinstance(other, Player) and entity.rect.colliderect(other.rect):
+                            from code.Const import ENTITY_HEALTH
+                            max_health = ENTITY_HEALTH[other.name]
+                            other.health = min(other.health + 30, max_health)
+                            self.entity_list.remove(entity)
+                            break
+
+
 
     def level_text(self, text_size: int, text: str, text_color: tuple, text_pos: tuple):
         text_font: Font = pygame.font.SysFont(name="Lucida Sans Typewriter", size=text_size)

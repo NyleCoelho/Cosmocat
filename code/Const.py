@@ -1,10 +1,14 @@
 import pygame
+SPAWN_LIFESAVER_EVENT = pygame.USEREVENT + 3
 
 WIN_WIDTH = 1366
 WIN_HEIGHT = 768
 
 C_GREEN = (111, 254, 3)
 C_WHITE = (255,255,255)
+C_PINK = (255, 94, 240)
+C_RED = (0, 0, 0)
+C_BLACK = (0, 0, 0)
 
 MENU_OPTION = ('NEW GAME', 
                'MULTIPLAYER',
@@ -38,6 +42,7 @@ ENTITY_SPEED = {
     'Enemy1Shot': 16,
     'Enemy2': 8,
     'Enemy2Shot': 16,
+    'LifeSaver': 1
 }
 
 PLAYER_KEY_UP = {'Auroracat': pygame.K_UP,
@@ -61,7 +66,8 @@ ENTITY_HEALTH = {
     'Enemy1': 110,
     'Enemy1Shot': 1,
     'Enemy2': 110,
-    'Enemy2Shot': 1
+    'Enemy2Shot': 1,
+    'LifeSaver': 1
 }
 
 ENTITY_DAMAGE = {
@@ -85,6 +91,7 @@ ENTITY_DAMAGE = {
     'Enemy1Shot': 20,
     'Enemy2': 1,
     'Enemy2Shot': 15,
+    'LifeSaver': 1
 }
 
 ENTITY_SCORE = {
@@ -108,6 +115,7 @@ ENTITY_SCORE = {
     'Enemy1Shot': 0,
     'Enemy2': 125,
     'Enemy2Shot': 0,
+    'LifeSaver': 1
 }
 
 ENTITY_SHOT_DELAY = {

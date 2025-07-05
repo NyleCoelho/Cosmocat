@@ -5,7 +5,6 @@ from code.Entity import Entity
 from code.Player import Player
 from code.CosmocatShot import CosmocatShot
 
-
 class EntityMediator:
 
     @staticmethod
