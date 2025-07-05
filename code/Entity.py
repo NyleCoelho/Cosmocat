@@ -61,6 +61,7 @@ class Entity(ABC):
             screen.blit(self.surf, self.rect.topleft)
 
 
+
     def draw_health_hud(self, screen):
         bar_width = 190
         bar_height = 20
@@ -71,22 +72,28 @@ class Entity(ABC):
         proportion = max(0, self.health / max_health)
         filled_width = int(bar_width * proportion)
 
-        # Cor personalizada por personagem
+        # Posição Y diferente para cada personagem
         if self.name.lower() == 'auroracat':
             life_color = C_PINK
-            y = 70
+            y = 70  # AuroraCat fica mais abaixo
         else:
             life_color = C_GREEN
+            y = 30  # CosmoCat fica mais acima
 
+        # Desenha a barra de vida
         pygame.draw.rect(screen, C_WHITE, (x - 1, y - 1, bar_width + 2, bar_height + 2))
-        pygame.draw.rect(screen, C_BLACK, (x, y, bar_width, bar_height))              # Fundo
-        pygame.draw.rect(screen, life_color, (x, y, filled_width, bar_height)) 
-             # Vida atual
+        pygame.draw.rect(screen, C_BLACK, (x, y, bar_width, bar_height))  # Fundo
+        pygame.draw.rect(screen, life_color, (x, y, filled_width, bar_height))  # Vida atual
 
-        # Texto opcional de HP numérico
+        # Texto de HP numérico
         font = pygame.font.SysFont(None, 20)
         texto = font.render(f'{int(self.health)}/{max_health}', True, C_WHITE)
         screen.blit(texto, (x + bar_width + 10, y))
 
-            # Ícone de coração personalizado
-        screen.blit(self.life_icon, (x - 37, y - 15))  # Desenha ao lado esquerdo da barra   
+        # Ícone de vida
+        screen.blit(self.life_icon, (x - 37, y - 15))
+
+        # Adiciona a exibição do score
+        score_x = x + bar_width + 100  # Posição à direita da barra de vida
+        score_text = font.render(f'Score: {self.score}', True, C_WHITE)
+        screen.blit(score_text, (score_x, y))
