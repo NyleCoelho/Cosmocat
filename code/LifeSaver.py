@@ -2,6 +2,7 @@ from code.Const import ENTITY_SPEED
 from code.Entity import Entity
 import random
 import math
+import pygame
 
 class LifeSaver(Entity):
 
@@ -10,6 +11,8 @@ class LifeSaver(Entity):
         self.velocity_x = -ENTITY_SPEED[self.name]  # continua indo pra esquerda
         self.wave_offset = random.uniform(0, math.pi * 2)  
         self.t = 0  # tempo interno para o zigue-zague
+        self.mask = pygame.mask.from_surface(self.surf)
+
 
     def move(self):
         self.rect.x += self.velocity_x  # continua indo pra esquerda

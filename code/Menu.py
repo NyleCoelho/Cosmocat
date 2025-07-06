@@ -9,7 +9,7 @@ from code.Const import WIN_WIDTH, WIN_HEIGHT, C_GREEN, MENU_OPTION, C_WHITE, C_G
 class Menu:
     def __init__(self, window):
         self.window = window
-        self.surf = pygame.image.load('./assets/Backgrounds/menu/blue-preview.png').convert_alpha()
+        self.surf = pygame.image.load('./assets/menu-background.png').convert_alpha()
         self.rect = self.surf.get_rect(left=0, top=0)
         self.navigate_sound = pygame.mixer.Sound('./assets/Sound-Effects/menu-hover.wav')
 

@@ -4,13 +4,15 @@ import pygame
 import random
 from pygame import Surface, Rect
 from pygame.font import Font
-from code.Const import C_WHITE, WIN_HEIGHT, MENU_OPTION, EVENT_ENEMY, SPAWN_TIME, C_GREEN, C_PINK, SPAWN_LIFESAVER_EVENT, POWERUP_DURATION, SPAWN_POWERUP_EVENT, WIN_WIDTH
+from code.Const import C_WHITE, MENU_OPTION, EVENT_ENEMY, SPAWN_TIME, SPAWN_LIFESAVER_EVENT, POWERUP_DURATION, SPAWN_POWERUP_EVENT, WIN_WIDTH
 from code.Entity import Entity
 from code.EntityFactory import EntityFactory
 from code.EntityMediator import EntityMediator
 from code.Player import Player
 from code.Enemy import Enemy
 from code.LifeSaver import LifeSaver
+from code.Win import Win
+
 
 class Level:
 
@@ -21,7 +23,7 @@ class Level:
         self.entity_list: list[Entity] = []
         self.entity_list.extend(EntityFactory.get_entity('Level1Bg'))
         self.entity_list.append(EntityFactory.get_entity('Cosmocat'))
-        self.timeout = 70000 #20 segundos
+        self.timeout = 170000
         self.start_time = pygame.time.get_ticks()
         self.timer_font = pygame.font.Font('./assets/fonts/title.ttf', 32)
         if game_mode in MENU_OPTION[1]:
@@ -53,8 +55,10 @@ class Level:
             elapsed_time = current_time - self.start_time
 
             if elapsed_time >= self.timeout:
-                return 'MENU'  # ou 'WIN' ou qualquer outra ação que você queira
-
+                boss_alive = any(ent.name == 'Boss' for ent in self.entity_list)
+                if boss_alive:
+                    return 'GAMEOVER'
+                
             # Eventos
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -98,6 +102,21 @@ class Level:
             # Verificações
             EntityMediator.verify_collision(entity_list=self.entity_list)
             EntityMediator.verify_health(entity_list=self.entity_list)
+
+            # Verifica se o boss foi derrotado
+            if self.boss_spawned:
+                boss_still_alive = any(ent.name == 'Boss' for ent in self.entity_list)
+
+                if not boss_still_alive:
+                    pygame.mixer_music.stop()
+                    win_screen = Win(self.window)
+                    pygame.time.delay(500)  # pausa para dar tempo do som/morte tocar
+                    option = win_screen.run()
+
+                    if option == 'JOGAR NOVAMENTE':
+                        return 'RESTART'
+                    elif option == 'VOLTAR AO MENU':
+                        return 'MENU'
 
                         # Verificar se algum player morreu
             for entity in self.entity_list:

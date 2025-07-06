@@ -5,7 +5,7 @@ from code.Const import WIN_WIDTH, WIN_HEIGHT, ENTITY_DAMAGE, ENTITY_HEALTH, ENTI
 class Entity(ABC): 
     def __init__(self, name: str, position: tuple, scale_to_screen=True, custom_scale=None):
         self.name = name
-        self.surf = pygame.image.load(f'./assets/Backgrounds/level1/{name}.png').convert_alpha()
+        self.surf = pygame.image.load(f'./assets/{name}.png').convert_alpha()
         
         if scale_to_screen:
             self.surf = pygame.transform.scale(self.surf, (WIN_WIDTH, WIN_HEIGHT))
@@ -27,9 +27,9 @@ class Entity(ABC):
         self.mask = pygame.mask.from_surface(self.surf)
 
         if self.name.lower() == 'auroracat':
-            icon_path = './assets/Shots-and-icons/Auroracat-life.png'
+            icon_path = './assets/Life-Icons/Auroracat-life.png'
         else:
-            icon_path = './assets/Shots-and-icons/Cosmocat-life.png'
+            icon_path = './assets/Life-Icons/Cosmocat-life.png'
 
         self.life_icon = pygame.image.load(icon_path).convert_alpha()
         self.life_icon = pygame.transform.scale(self.life_icon, (50, 50))
@@ -93,8 +93,3 @@ class Entity(ABC):
 
         # Ícone de vida
         screen.blit(self.life_icon, (x - 37, y - 15))
-
-        # Adiciona a exibição do score
-        score_x = x + bar_width + 100  # Posição à direita da barra de vida
-        score_text = font.render(f'Score: {self.score}', True, C_WHITE)
-        screen.blit(score_text, (score_x, y))

@@ -45,10 +45,14 @@ class Boss(Enemy):
     def take_damage(self, amount):
         if self.health > 0:  # Só aplica se ele ainda estiver vivo
             self.health -= amount
-            self.last_dmg = 'Something'  
+            self.last_dmg = 'CosmocatShot'  # ← nome do tiro correto
             self.flash_timer = 100
             self.damage_sound.play()
 
+            print(f"[DEBUG] Boss recebeu {amount} de dano. Vida atual: {self.health}")  # ← útil para teste
+
             if self.health <= 0:  #  momento da morte
+                print("[DEBUG] Boss morreu!")
                 self.death_sound.play()
+
 

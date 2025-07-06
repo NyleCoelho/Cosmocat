@@ -12,17 +12,19 @@ C_BLACK = (0, 0, 0)
 
 MENU_OPTION = ('NEW GAME', 
                'MULTIPLAYER',
-               'SCORE',
                'EXIT')
 
 GAMEOVER_OPTION = ('TENTAR NOVAMENTE', 
-                    'VOLTAR AO MENU',)
+                    'VOLTAR AO MENU')
+
+WIN_OPTION = ('JOGAR NOVAMENTE',
+               'VOLTAR AO MENU')
 
 EVENT_ENEMY = pygame.USEREVENT + 1
 EVENT_TIMEOUT = pygame.USEREVENT + 2
 SPAWN_TIME = 1000
 TIMEOUT_STEP = 100  # 100ms
-TIMEOUT_LEVEL = 7000 # 20s
+TIMEOUT_LEVEL = 1700
 
 SPAWN_POWERUP_EVENT = pygame.USEREVENT + 3
 POWERUP_DURATION = 10000  # 10 segundos
@@ -66,10 +68,10 @@ PLAYER_KEY_SHOOT = {'Auroracat': pygame.K_RCTRL,
                     'Cosmocat': pygame.K_RETURN}
 
 ENTITY_HEALTH = {
-    'Boss': 1000,
+    'Boss': 300,
     'Level1Bg0': 999,
     'Level1Bg1': 999,
-    'Cosmocat': 1000,
+    'Cosmocat': 300,
     'CosmocatShot': 1,
     'Auroracat': 300,
     'AuroracatShot': 1,
@@ -103,7 +105,7 @@ ENTITY_DAMAGE = {
     'Enemy1Shot': 20,
     'Enemy2': 1,
     'Enemy2Shot': 15,
-    'BossShot': 20,
+    'BossShot': 50,
     'LifeSaver': 1,
     'PowerUp': 0,
     'Boss': 20,

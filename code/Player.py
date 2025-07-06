@@ -21,7 +21,6 @@ class Player(Entity):
             trail_color = pygame.Color(255, 255, 255)  # branco padrão, por segurança
         self.original_trail_color = trail_color
         self.colored_surf = self.create_colored_version(trail_color)
-        self.lifesaver_sound = pygame.mixer.Sound('./assets/Sound-Effects/life-saver.wav')
         self.PowerUp_sound = pygame.mixer.Sound('./assets/Sound-Effects/PowerUp.wav')
         self.PowerUp_sound.set_volume(4.5)
         self.powerup_active = False
@@ -33,10 +32,17 @@ class Player(Entity):
         self.powered_speed = self.normal_speed * 1.5  # 50% mais rápido
         self.current_speed = self.normal_speed  # começa com a velocidade normal
         self.shield_color = pygame.Color(0, 255, 230)
-        shield_img = pygame.image.load('./assets/Backgrounds/level1/Shield.png').convert_alpha()
+        shield_img = pygame.image.load('./assets/Shield.png').convert_alpha()
         self.shield_sprite = pygame.transform.scale(shield_img, (160, 160))
-
-
+        self.mask = pygame.mask.from_surface(self.surf)
+        try:
+            self.lifesaver_sound = pygame.mixer.Sound('./assets/Sound-Effects/life-saver.wav')
+            self.lifesaver_sound.set_volume(1.0)  # Volume máximo
+            print(f"[DEBUG] Som do LifeSaver carregado: {self.lifesaver_sound.get_length()} segundos")
+        except Exception as e:
+            print(f"[ERRO] Falha ao carregar som: {e}")
+            # Fallback - cria um som dummy
+            self.lifesaver_sound = pygame.mixer.Sound(buffer=bytearray([0x80]*8000))
 
 
     def move(self):

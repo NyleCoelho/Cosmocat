@@ -58,12 +58,20 @@ class EntityMediator:
                     if isinstance(ent1, LifeSaver) or isinstance(ent2, LifeSaver):
                         player = ent1 if isinstance(ent1, Player) else ent2
                         lifesaver = ent2 if isinstance(ent1, Player) else ent1
-                        max_health = (ENTITY_HEALTH[player.name] + 1)
-                        heal_amount = min(100, max_health - player.health)
 
-                        if heal_amount > 0:  # Só cura se precisar
-                            player.health += heal_amount
-                            player.lifesaver_sound.play()
+                        # Inicializa heal_amount com 0 por padrão
+                        heal_amount = 0
+                        
+                        try:
+                            max_health = ENTITY_HEALTH[player.name]
+                            current_health = player.health
+                            heal_amount = min(100, max(0, max_health - current_health))
+                            
+                            if heal_amount > 0:
+                                player.health += heal_amount
+                                player.lifesaver_sound.play()
+                        finally:
+                            lifesaver.health = 0  # Garante que o LifeSaver será removido
 
                     # Adicione a lógica para PowerUp
                     if isinstance(ent1, PowerUp) or isinstance(ent2, PowerUp):
@@ -82,17 +90,6 @@ class EntityMediator:
                     ent2.flash_timer = 10
 
     @staticmethod
-    def __give_score(enemy: Enemy, entity_list: list[Entity]):
-        if enemy.last_dmg == 'CosmocatShot':
-            for ent in entity_list:
-                if ent.name == 'Cosmocat':
-                    ent.score += enemy.score
-        elif enemy.last_dmg == 'AuroracatShot':
-            for ent in entity_list:
-                if ent.name == 'Auroracat':
-                    ent.score += enemy.score
-
-    @staticmethod
     def verify_collision(entity_list: list[Entity]):
         for i in range(len(entity_list)):
             entity1 = entity_list[i]
@@ -105,10 +102,15 @@ class EntityMediator:
     def verify_health(entity_list: list[Entity]):
         for ent in entity_list[:]:  # usa cópia da lista para evitar bugs
             if ent.health <= 0:
-                if isinstance(ent, Enemy) and ent.last_dmg in ['CosmocatShot', 'AuroracatShot']:
-                    EntityMediator.__give_score(ent, entity_list)
 
-                # Remove tudo, exceto Player e Boss
-                if not isinstance(ent, (Player, Boss)):
+                if isinstance(ent, Boss):
                     entity_list.remove(ent)
+                    return 'WIN'  # ← sinaliza vitória
+
+                elif not isinstance(ent, Player):
+                    entity_list.remove(ent)
+
+        return None  # Nada aconteceu
+
+
 
