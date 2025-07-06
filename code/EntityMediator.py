@@ -46,40 +46,40 @@ class EntityMediator:
             valid_interaction = True
         elif isinstance(ent1, Boss) and isinstance(ent2, Player):
             valid_interaction = True
-        
 
         if valid_interaction:  # if valid_interaction == True:
-            if (ent1.rect.right >= ent2.rect.left and
-                    ent1.rect.left <= ent2.rect.right and
-                    ent1.rect.bottom >= ent2.rect.top and
-                    ent1.rect.top <= ent2.rect.bottom):
+            # Primeiro testa colisão retangular (mais rápido)
+            if ent1.rect.colliderect(ent2.rect):
+                # Agora testa colisão por pixel
+                offset = (ent2.rect.left - ent1.rect.left, ent2.rect.top - ent1.rect.top)
+                if ent1.mask.overlap(ent2.mask, offset):
+                    # COLISÃO PIXEL-PERFEITA DETECTADA
                 
-                if isinstance(ent1, LifeSaver) or isinstance(ent2, LifeSaver):
-                    player = ent1 if isinstance(ent1, Player) else ent2
-                    lifesaver = ent2 if isinstance(ent1, Player) else ent1
-                    max_health = (ENTITY_HEALTH[player.name] + 1)
-                    heal_amount = min(100, max_health - player.health)
+                    if isinstance(ent1, LifeSaver) or isinstance(ent2, LifeSaver):
+                        player = ent1 if isinstance(ent1, Player) else ent2
+                        lifesaver = ent2 if isinstance(ent1, Player) else ent1
+                        max_health = (ENTITY_HEALTH[player.name] + 1)
+                        heal_amount = min(100, max_health - player.health)
 
-                    if heal_amount > 0:  # Só cura se precisar
-                        player.health += heal_amount
-                        player.lifesaver_sound.play()
+                        if heal_amount > 0:  # Só cura se precisar
+                            player.health += heal_amount
+                            player.lifesaver_sound.play()
 
-                # Adicione a lógica para PowerUp
-                if isinstance(ent1, PowerUp) or isinstance(ent2, PowerUp):
-                    player = ent1 if isinstance(ent1, Player) else ent2
-                    powerup = ent2 if isinstance(ent1, Player) else ent1
-                    
-                    # Ativa o power-up no jogador
-                    player.activate_powerup()
-                    powerup.health = 0  # Remove o power-up
-                    
-
-                ent1.take_damage(ent2.damage)
-                ent2.take_damage(ent1.damage)
-                ent1.last_dmg = ent2.name
-                ent2.last_dmg = ent1.name
-                ent1.flash_timer = 10
-                ent2.flash_timer = 10
+                    # Adicione a lógica para PowerUp
+                    if isinstance(ent1, PowerUp) or isinstance(ent2, PowerUp):
+                        player = ent1 if isinstance(ent1, Player) else ent2
+                        powerup = ent2 if isinstance(ent1, Player) else ent1
+                        
+                        # Ativa o power-up no jogador
+                        player.activate_powerup()
+                        powerup.health = 0  # Remove o power-up
+                        
+                    ent1.take_damage(ent2.damage)
+                    ent2.take_damage(ent1.damage)
+                    ent1.last_dmg = ent2.name
+                    ent2.last_dmg = ent1.name
+                    ent1.flash_timer = 10
+                    ent2.flash_timer = 10
 
     @staticmethod
     def __give_score(enemy: Enemy, entity_list: list[Entity]):

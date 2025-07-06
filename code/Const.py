@@ -144,5 +144,5 @@ ENTITY_SHOT_DELAY = {
     'Auroracat': 20,
     'Enemy1': 20,
     'Enemy2': 20,
-    'Boss': 1000,
+    'Boss': 10,
 }

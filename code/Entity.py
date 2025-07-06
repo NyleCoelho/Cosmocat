@@ -24,6 +24,7 @@ class Entity(ABC):
         self.flash_timer = 0 
         self.damage_sound = pygame.mixer.Sound('./assets/Sound-Effects/Hit.wav')
         self.damage_sound.set_volume(2.5)  
+        self.mask = pygame.mask.from_surface(self.surf)
 
         if self.name.lower() == 'auroracat':
             icon_path = './assets/Shots-and-icons/Auroracat-life.png'

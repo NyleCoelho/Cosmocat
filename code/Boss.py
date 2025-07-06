@@ -1,5 +1,5 @@
 from code.Enemy import Enemy
-from code.Const import WIN_WIDTH, WIN_HEIGHT
+from code.Const import WIN_WIDTH, WIN_HEIGHT, ENTITY_SHOT_DELAY
 import pygame
 import random
 
@@ -9,9 +9,14 @@ class Boss(Enemy):
         # Redimensiona o sprite do boss
         self.surf = pygame.transform.scale(self.surf, (500, 480))
         self.rect = self.surf.get_rect(topleft=self.rect.topleft)
+        self.death_sound = pygame.mixer.Sound('./assets/Sound-Effects/Boom.wav')
+        self.shot_delay = ENTITY_SHOT_DELAY[self.name]
         self.vertical_direction = 1
         self.float_speed = 2
         self.stop_x = WIN_WIDTH - 600  # posição final do boss
+        self.damage_sound = pygame.mixer.Sound('./assets/Sound-Effects/Hit.wav')
+        self.damage_sound.set_volume(3.5)  
+        self.mask = pygame.mask.from_surface(self.surf)
 
     def move(self):
         if self.rect.x > self.stop_x:
@@ -42,6 +47,7 @@ class Boss(Enemy):
             self.health -= amount
             self.last_dmg = 'Something'  
             self.flash_timer = 100
+            self.damage_sound.play()
 
             if self.health <= 0:  #  momento da morte
                 self.death_sound.play()
