@@ -21,7 +21,7 @@ class Level:
         self.entity_list: list[Entity] = []
         self.entity_list.extend(EntityFactory.get_entity('Level1Bg'))
         self.entity_list.append(EntityFactory.get_entity('Cosmocat'))
-        self.timeout = 200000 #20 segundos
+        self.timeout = 70000 #20 segundos
         self.start_time = pygame.time.get_ticks()
         self.timer_font = pygame.font.Font('./assets/fonts/title.ttf', 32)
         if game_mode in MENU_OPTION[1]:
@@ -30,6 +30,8 @@ class Level:
         pygame.time.set_timer(SPAWN_LIFESAVER_EVENT, 10000)  # aparece a cada 10 segundos
         pygame.time.set_timer(EVENT_ENEMY, SPAWN_TIME)
         pygame.time.set_timer(SPAWN_POWERUP_EVENT, POWERUP_DURATION)  # aparece a cada 10 segundos
+        self.boss_spawned = False
+
     
     def level_text(self, text_size: int, text: str, text_color: tuple, text_center_pos: tuple):
         font_path = './assets/fonts/title.ttf'
@@ -121,6 +123,10 @@ class Level:
                             other.health = min(other.health + 30, max_health)
                             self.entity_list.remove(entity)
                             break
+
+            if remaining_time == 60 and not self.boss_spawned:
+                self.entity_list.append(EntityFactory.get_entity('Boss'))
+                self.boss_spawned = True
 
 
     def level_text(self, text: str, text_color: tuple, text_center_pos: tuple):

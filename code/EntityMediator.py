@@ -6,6 +6,7 @@ from code.Player import Player
 from code.CosmocatShot import CosmocatShot
 from code.LifeSaver import LifeSaver
 from code.PowerUp import PowerUp
+from code.Boss import Boss
 
 class EntityMediator:
 
@@ -24,10 +25,10 @@ class EntityMediator:
     @staticmethod
     def __verify_collision_entity(ent1, ent2):
         valid_interaction = False
-        if isinstance(ent1, Enemy) and isinstance(ent2, CosmocatShot):
+        if isinstance(ent1, (Enemy, Boss)) and isinstance(ent2, CosmocatShot):
             valid_interaction = True
-            ent1.killed_by_player = True  #  Marca que foi morto por tiro
-        elif isinstance(ent1, CosmocatShot) and isinstance(ent2, Enemy):
+            ent1.killed_by_player = True  # Marca que foi morto por tiro
+        elif isinstance(ent1, CosmocatShot) and isinstance(ent2, (Enemy, Boss)):
             valid_interaction = True
         elif isinstance(ent1, Player) and isinstance(ent2, EnemyShot):
             valid_interaction = True
@@ -41,6 +42,11 @@ class EntityMediator:
             valid_interaction = True
         elif isinstance(ent1, PowerUp) and isinstance(ent2, Player):
             valid_interaction = True
+        elif isinstance(ent1, Player) and isinstance(ent2, Boss):
+            valid_interaction = True
+        elif isinstance(ent1, Boss) and isinstance(ent2, Player):
+            valid_interaction = True
+        
 
         if valid_interaction:  # if valid_interaction == True:
             if (ent1.rect.right >= ent2.rect.left and
@@ -101,6 +107,8 @@ class EntityMediator:
             if ent.health <= 0:
                 if isinstance(ent, Enemy) and ent.last_dmg in ['CosmocatShot', 'AuroracatShot']:
                     EntityMediator.__give_score(ent, entity_list)
-                # Só remove se **não for jogador**
-                if not isinstance(ent, Player):
+
+                # Remove tudo, exceto Player e Boss
+                if not isinstance(ent, (Player, Boss)):
                     entity_list.remove(ent)
+
