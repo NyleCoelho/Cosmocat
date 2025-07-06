@@ -1,4 +1,3 @@
-
 import sys
 import pygame
 import random
@@ -13,53 +12,46 @@ from code.Enemy import Enemy
 from code.LifeSaver import LifeSaver
 from code.Win import Win
 
-
 class Level:
-
     def __init__(self, window, name, game_mode):
         self.window = window
         self.name = name
         self.game_mode = game_mode
         self.entity_list: list[Entity] = []
-        self.entity_list.extend(EntityFactory.get_entity('Level1Bg'))
-        self.entity_list.append(EntityFactory.get_entity('Cosmocat'))
-        self.timeout = 170000
+        self.entity_list.extend(EntityFactory.get_entity('Level1Bg'))  # plano de fundo
+        self.entity_list.append(EntityFactory.get_entity('Cosmocat'))  # jogador principal
+        self.timeout = 170000  # tempo limite da fase
         self.start_time = pygame.time.get_ticks()
         self.timer_font = pygame.font.Font('./assets/fonts/title.ttf', 32)
-        if game_mode in MENU_OPTION[1]:
-            self.entity_list.append(EntityFactory.get_entity('Auroracat'))
-        pygame.time.set_timer(EVENT_ENEMY, SPAWN_TIME)
-        pygame.time.set_timer(SPAWN_LIFESAVER_EVENT, 10000)  # aparece a cada 10 segundos
-        pygame.time.set_timer(EVENT_ENEMY, SPAWN_TIME)
-        pygame.time.set_timer(SPAWN_POWERUP_EVENT, POWERUP_DURATION)  # aparece a cada 10 segundos
-        self.boss_spawned = False
 
-    
-    def level_text(self, text_size: int, text: str, text_color: tuple, text_center_pos: tuple):
-        font_path = './assets/fonts/title.ttf'
-        text_font: Font = pygame.font.Font(font_path, text_size)
-        text_surf: Surface = text_font.render(text, True, text_color).convert_alpha()
-        text_rect: Rect = text_surf.get_rect(center=text_center_pos)
-        self.window.blit(source=text_surf, dest=text_rect)
+        if game_mode in MENU_OPTION[1]:  # modo cooperativo
+            self.entity_list.append(EntityFactory.get_entity('Auroracat'))
+
+        # define timers para eventos recorrentes
+        pygame.time.set_timer(EVENT_ENEMY, SPAWN_TIME)
+        pygame.time.set_timer(SPAWN_LIFESAVER_EVENT, 10000)
+        pygame.time.set_timer(SPAWN_POWERUP_EVENT, POWERUP_DURATION)
+
+        self.boss_spawned = False
 
     def run(self):
         pygame.mixer_music.load(f'./assets/Songs/{self.name}.mp3')
-        pygame.mixer_music.play(-1)
+        pygame.mixer_music.play(-1)  # toca em loop
 
         clock = pygame.time.Clock()
+
         while True:
             clock.tick(60)
-
-        # Verifica se o tempo de fase acabou
             current_time = pygame.time.get_ticks()
             elapsed_time = current_time - self.start_time
 
+            # se o tempo acabar e o boss estiver vivo, Game Over
             if elapsed_time >= self.timeout:
                 boss_alive = any(ent.name == 'Boss' for ent in self.entity_list)
                 if boss_alive:
                     return 'GAMEOVER'
-                
-            # Eventos
+
+            # trata eventos do pygame
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -72,8 +64,7 @@ class Level:
                 if event.type == SPAWN_POWERUP_EVENT:
                     self.entity_list.append(EntityFactory.get_entity('PowerUp'))
 
-
-            # Atualiza e desenha entidades
+            # movimenta e desenha entidades
             for ent in self.entity_list:
                 if hasattr(ent, "draw"):
                     ent.draw(self.window)
@@ -82,57 +73,53 @@ class Level:
 
                 ent.move()
 
+                # dispara tiros se for player ou inimigo
                 if isinstance(ent, (Player, Enemy)):
                     shoot = ent.shoot()
                     if shoot is not None:
                         self.entity_list.append(shoot)
 
-            # Desenha barra de vida dos players no canto da tela
+            # desenha barra de vida dos jogadores
             for ent in self.entity_list:
                 if isinstance(ent, Player):
                     ent.draw_health_hud(self.window)
 
-            # Tempo restante em segundos
+            # exibe cronômetro
             remaining_time = max(0, (self.timeout - elapsed_time) // 1000)
             self.level_text(f"Tempo restante: {remaining_time}s", C_WHITE, (WIN_WIDTH // 2, 40))
-
-
             pygame.display.flip()
 
-            # Verificações
+            # verifica colisões e mortes
             EntityMediator.verify_collision(entity_list=self.entity_list)
             EntityMediator.verify_health(entity_list=self.entity_list)
 
-            # Verifica se o boss foi derrotado
+            # vitória se o boss for derrotado
             if self.boss_spawned:
                 boss_still_alive = any(ent.name == 'Boss' for ent in self.entity_list)
-
                 if not boss_still_alive:
                     pygame.mixer_music.stop()
                     win_screen = Win(self.window)
-                    pygame.time.delay(500)  # pausa para dar tempo do som/morte tocar
+                    pygame.time.delay(500)
                     option = win_screen.run()
-
                     if option == 'JOGAR NOVAMENTE':
                         return 'RESTART'
                     elif option == 'VOLTAR AO MENU':
                         return 'MENU'
 
-                        # Verificar se algum player morreu
+            # verifica se algum jogador morreu
             for entity in self.entity_list:
                 if isinstance(entity, Player) and entity.health <= 0:
-                    from code.GameOver import GameOver 
+                    from code.GameOver import GameOver
                     pygame.mixer_music.stop()
                     gameover_screen = GameOver(self.window)
-                    pygame.time.delay(500)  # pausa de 0.5 segundo
+                    pygame.time.delay(500)
                     option = gameover_screen.run()
-
                     if option == 'TENTAR NOVAMENTE':
                         return 'RESTART'
                     elif option == 'VOLTAR AO MENU':
                         return 'MENU'
 
-
+            # recuperação de vida ao colidir com lifesaver
             for entity in self.entity_list[:]:
                 if isinstance(entity, LifeSaver):
                     for other in self.entity_list:
@@ -143,12 +130,13 @@ class Level:
                             self.entity_list.remove(entity)
                             break
 
+            # invoca o boss quando restam 60 segundos
             if remaining_time == 60 and not self.boss_spawned:
                 self.entity_list.append(EntityFactory.get_entity('Boss'))
                 self.boss_spawned = True
 
-
     def level_text(self, text: str, text_color: tuple, text_center_pos: tuple):
+        # exibe texto no topo (ex: cronômetro)
         text_surf = self.timer_font.render(text, True, text_color).convert_alpha()
         text_rect = text_surf.get_rect(center=text_center_pos)
         self.window.blit(text_surf, text_rect)

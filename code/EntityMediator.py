@@ -12,6 +12,7 @@ class EntityMediator:
 
     @staticmethod
     def __verify_collision_window(ent: Entity):
+        # Remove entidades que saíram da tela
         if isinstance(ent, Enemy):
             if ent.rect.right <= 0:
                 ent.health = 0
@@ -25,9 +26,11 @@ class EntityMediator:
     @staticmethod
     def __verify_collision_entity(ent1, ent2):
         valid_interaction = False
+
+        # Define pares que podem colidir
         if isinstance(ent1, (Enemy, Boss)) and isinstance(ent2, CosmocatShot):
             valid_interaction = True
-            ent1.killed_by_player = True  # Marca que foi morto por tiro
+            ent1.killed_by_player = True
         elif isinstance(ent1, CosmocatShot) and isinstance(ent2, (Enemy, Boss)):
             valid_interaction = True
         elif isinstance(ent1, Player) and isinstance(ent2, EnemyShot):
@@ -47,41 +50,35 @@ class EntityMediator:
         elif isinstance(ent1, Boss) and isinstance(ent2, Player):
             valid_interaction = True
 
-        if valid_interaction:  # if valid_interaction == True:
-            # Primeiro testa colisão retangular (mais rápido)
-            if ent1.rect.colliderect(ent2.rect):
-                # Agora testa colisão por pixel
+        # Verifica colisão se o par for válido
+        if valid_interaction:
+            if ent1.rect.colliderect(ent2.rect):  # colisão bounding box
                 offset = (ent2.rect.left - ent1.rect.left, ent2.rect.top - ent1.rect.top)
-                if ent1.mask.overlap(ent2.mask, offset):
-                    # COLISÃO PIXEL-PERFEITA DETECTADA
-                
+                if ent1.mask.overlap(ent2.mask, offset):  # colisão por pixel (máscara)
+
+                    # Caso seja um LifeSaver
                     if isinstance(ent1, LifeSaver) or isinstance(ent2, LifeSaver):
                         player = ent1 if isinstance(ent1, Player) else ent2
                         lifesaver = ent2 if isinstance(ent1, Player) else ent1
-
-                        # Inicializa heal_amount com 0 por padrão
                         heal_amount = 0
-                        
                         try:
                             max_health = ENTITY_HEALTH[player.name]
                             current_health = player.health
-                            heal_amount = min(100, max(0, max_health - current_health))
-                            
+                            heal_amount = min(100, max(0, max_health - current_health))  # cura até 100
                             if heal_amount > 0:
                                 player.health += heal_amount
                                 player.lifesaver_sound.play()
                         finally:
-                            lifesaver.health = 0  # Garante que o LifeSaver será removido
+                            lifesaver.health = 0  # remove lifesaver
 
-                    # Adicione a lógica para PowerUp
+                    # Caso seja um PowerUp
                     if isinstance(ent1, PowerUp) or isinstance(ent2, PowerUp):
                         player = ent1 if isinstance(ent1, Player) else ent2
                         powerup = ent2 if isinstance(ent1, Player) else ent1
-                        
-                        # Ativa o power-up no jogador
                         player.activate_powerup()
-                        powerup.health = 0  # Remove o power-up
-                        
+                        powerup.health = 0  # remove powerup
+
+                    # Dano e flash para os dois envolvidos
                     ent1.take_damage(ent2.damage)
                     ent2.take_damage(ent1.damage)
                     ent1.last_dmg = ent2.name
@@ -91,26 +88,22 @@ class EntityMediator:
 
     @staticmethod
     def verify_collision(entity_list: list[Entity]):
+        # Verifica colisões entre todas as entidades da lista
         for i in range(len(entity_list)):
             entity1 = entity_list[i]
-            EntityMediator.__verify_collision_window(entity1)
+            EntityMediator.__verify_collision_window(entity1)  # colisão com bordas
             for j in range(i + 1, len(entity_list)):
                 entity2 = entity_list[j]
-                EntityMediator.__verify_collision_entity(entity1, entity2)
+                EntityMediator.__verify_collision_entity(entity1, entity2)  # colisão entre entidades
 
     @staticmethod
     def verify_health(entity_list: list[Entity]):
-        for ent in entity_list[:]:  # usa cópia da lista para evitar bugs
+        # Remove entidades com vida zerada
+        for ent in entity_list[:]:
             if ent.health <= 0:
-
                 if isinstance(ent, Boss):
                     entity_list.remove(ent)
-                    return 'WIN'  # ← sinaliza vitória
-
+                    return 'WIN'  # vitória se o boss morrer
                 elif not isinstance(ent, Player):
                     entity_list.remove(ent)
-
-        return None  # Nada aconteceu
-
-
-
+        return None  # continua o jogo

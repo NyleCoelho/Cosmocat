@@ -18,18 +18,16 @@ class Win:
         pygame.mixer_music.play(1)
 
         while True:
-            # Limpa a tela (opcional)
             self.window.fill((0, 0, 0))
-            # Desenha o fundo (se houver)
             self.window.blit(self.surf, self.rect)
             
-            # ---- TÍTULO DO JOGO (Centralizado) ----
+            # ---- TÍTULO DO JOGO  ----
             title1_y = int(WIN_HEIGHT * 0.35)  # 30% da altura
             title2_y = title1_y + 80  # Subtítulo 50px abaixo
             self.menu_text(100, "VOCÊ VENCEU!", C_GREEN, (WIN_WIDTH // 2, title1_y))
             self.menu_text(30, "A TERRA DE CATLAND ESTÁ SALVA!", C_GREEN, (WIN_WIDTH // 2, title2_y))
             
-            # ---- OPÇÕES DO MENU (Centralizadas) ----
+            # ---- OPÇÕES DE NAVEGAÇÃO ----
             options_start_y = WIN_HEIGHT // 1.8  # Começa no meio exato
             for i in range(len(WIN_OPTION)):
                 option_y = options_start_y + 60 * i  # Espaçamento de 40px
