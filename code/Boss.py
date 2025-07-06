@@ -24,6 +24,9 @@ class Boss(Enemy):
             elif self.rect.bottom >= WIN_HEIGHT - 100:
                 self.vertical_direction = -1
 
+            if self.flash_timer > 0:
+                self.flash_timer -= 1
+
     def shoot(self):
         now = pygame.time.get_ticks()
         if not hasattr(self, 'last_shot'):
